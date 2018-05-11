@@ -1,8 +1,12 @@
+local RedisClient = require('lib.RedisClient')
+
 Manager = {}
 
 -- Manager constructor
 function Manager.new()
 	local self = {}
+
+	local redisClient = RedisClient.new()
 
 	function self.load()
 
@@ -14,7 +18,10 @@ function Manager.new()
 
 	function self.draw()
 		local width, height, _ = love.window.getMode()
-    	love.graphics.print("Hello, world!", width/2, height/2)
+
+		if redisClient.ping() then
+    		love.graphics.print("Hello, world!", width/2, height/2)
+		end
 	end
 
 	return self

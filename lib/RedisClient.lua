@@ -1,6 +1,4 @@
--- The following line is system dependant.
-package.path = "/usr/local/share/lua/5.3/?.lua;" .. package.path
-local redis = require 'redis'
+local redis = require 'vendor.redis-lua.redis'
 
 RedisClient = {}
 

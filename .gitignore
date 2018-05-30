@@ -4,6 +4,8 @@ luac.out
 # local changes
 *.history
 
+*launch.json
+
 # luarocks build files
 *.src.rock
 *.zip

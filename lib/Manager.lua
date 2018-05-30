@@ -25,6 +25,8 @@ function Manager.new()
 			state = GameState.Game
 		elseif love.keyboard.isDown('e') then
 			state = GameState.End
+		elseif love.keyboard.isDown('escape') then
+			love.event.push('quit')
 		end
 	end
 

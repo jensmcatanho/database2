@@ -1,4 +1,5 @@
 local RedisClient = require('lib.RedisClient')
+local Highscore = require('lib.Highscore')
 
 Manager = {}
 
@@ -8,12 +9,14 @@ GameState = {Menu = 0, Highscore = 1, Game = 2, End = 3}
 function Manager.new()
 	local self = {}
 
-	local redisClient = nil
+	local redisClient = RedisClient.new()
 	local state = nil
+	local highscore = Highscore.new()
 
 	function self.load()
-		redisClient = RedisClient.new()
 		state = GameState.Menu
+		redisClient.load()
+		highscore.load()
 	end
 
 	function self.update(dt)
@@ -36,7 +39,7 @@ function Manager.new()
 		if state == GameState.Menu then
 			love.graphics.print("Menu", width/2, height/2)
 		elseif state == GameState.Highscore then
-			love.graphics.print("Highscore", width/2, height/2)
+			highscore.draw()
 		elseif state == GameState.Game then
 			love.graphics.print("Game", width/2, height/2)
 		elseif state == GameState.End then

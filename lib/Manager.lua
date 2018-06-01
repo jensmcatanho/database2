@@ -28,6 +28,7 @@ function Manager.new()
 			state = GameState.Game
 		elseif love.keyboard.isDown('e') then
 			state = GameState.End
+			redisClient.insert_score(10)
 		elseif love.keyboard.isDown('escape') then
 			love.event.push('quit')
 		end

@@ -16,6 +16,13 @@ function RedisClient.new()
 		return client:ping()
 	end
 
+	function self.insert_score(score)
+		time = os.time(os.date('*t'))
+		print(time)
+		print(score)
+		client:set(time, score)
+	end
+
 	return self
 end
 

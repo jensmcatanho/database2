@@ -16,7 +16,6 @@ function Manager.new()
 	function self.load()
 		state = GameState.Menu
 		redisClient.load()
-		highscore.load()
 	end
 
 	function self.update(dt)
@@ -24,6 +23,8 @@ function Manager.new()
 			state = GameState.Menu
 		elseif love.keyboard.isDown('h') then
 			state = GameState.Highscore
+			highscore_list = redisClient.retrieve_highscore()
+			highscore.load(highscore_list)
 		elseif love.keyboard.isDown('g') then
 			state = GameState.Game
 		elseif love.keyboard.isDown('e') then

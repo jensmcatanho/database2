@@ -13,12 +13,16 @@ function Highscore.new()
 
 	end
 
-	function self.draw()
+	function self.draw(mainFont)
 		local width, height, _ = love.window.getMode()
 
 		for index, data in ipairs(highscore) do
-			love.graphics.print(data.date, width/3, height/3 + 50*index)
-			love.graphics.print(data.score, width/2 + 50, height/3 + 50*index)
+			dateWidth = (width - 2 * mainFont:getWidth(data.date)) * 0.25
+			dateHeight = height - ((11 - index) * height)/11 - mainFont:getHeight()/2
+			scoreWidth = (3 * width - 2 * mainFont:getWidth(data.score)) * 0.25
+			scoreHeight = dateHeight
+			love.graphics.print(data.date, dateWidth, dateHeight)
+			love.graphics.print(data.score, scoreWidth, scoreHeight)
 		end
 	end
 

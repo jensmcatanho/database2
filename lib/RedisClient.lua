@@ -22,7 +22,7 @@ function RedisClient.new()
 	end
 
 	function self.retrieve_highscore()
-		zrevrange = client:zrevrange("highscore", "0", "10", "withscores")
+		zrevrange = client:zrevrange("highscore", "0", "9", "withscores")
 		highscore = {}
 
 		for _, data in ipairs(zrevrange) do

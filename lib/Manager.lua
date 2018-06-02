@@ -13,9 +13,12 @@ function Manager.new()
 	local state = nil
 	local highscore = Highscore.new()
 
+	local mainFont = love.graphics.newFont('resources/fonts/PressStart2P.ttf');
+
 	function self.load()
 		state = GameState.Menu
 		redisClient.load()
+		love.graphics.setFont(mainFont)
 	end
 
 	function self.update(dt)
@@ -39,15 +42,13 @@ function Manager.new()
 		local width, height, _ = love.window.getMode()
 
 		if state == GameState.Menu then
-			love.graphics.print("Menu", width/2, height/2)
+			love.graphics.print("Menu", (width - mainFont:getWidth("Menu"))/2, (height - mainFont:getHeight())/2)
 		elseif state == GameState.Highscore then
-			highscore.draw()
+			highscore.draw(mainFont)
 		elseif state == GameState.Game then
-			love.graphics.print("Game", width/2, height/2)
+			love.graphics.print("Game", (width - mainFont:getWidth("Game"))/2, (height - mainFont:getHeight())/2)
 		elseif state == GameState.End then
-			love.graphics.print("End", width/2, height/2)
-		else
-			love.graphics.print("Error! Unknown state!", width/2, height/2)
+			love.graphics.print("End", (width - mainFont:getWidth("End"))/2, (height - mainFont:getHeight())/2)
 		end
 		
 	end

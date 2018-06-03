@@ -15,6 +15,8 @@ function Manager.new()
 
 	local mainFont = love.graphics.newFont('resources/fonts/PressStart2P.ttf');
 
+	local score = 0
+
 	function self.load()
 		state = GameState.Menu
 		redisClient.load()
@@ -22,18 +24,36 @@ function Manager.new()
 	end
 
 	function self.update(dt)
-		if love.keyboard.isDown('m') then
-			state = GameState.Menu
-		elseif love.keyboard.isDown('h') then
-			state = GameState.Highscore
-			highscore_list = redisClient.retrieve_highscore()
-			highscore.load(highscore_list)
-		elseif love.keyboard.isDown('g') then
-			state = GameState.Game
-		elseif love.keyboard.isDown('e') then
-			state = GameState.End
-			redisClient.insert_score(10)
-		elseif love.keyboard.isDown('escape') then
+		if state == GameState.Menu then
+			if love.keyboard.isDown('h') then
+				highscore_list = redisClient.retrieve_highscore()
+				highscore.load(highscore_list)
+				state = GameState.Highscore
+			elseif love.keyboard.isDown('g') then
+				state = GameState.Game
+			end
+
+		elseif state == GameState.Highscore then
+			if love.keyboard.isDown('m') then
+				state = GameState.Menu
+			end
+ 
+		elseif state == GameState.Game then
+			if love.keyboard.isDown('m') then
+				state = GameState.Menu
+			elseif love.keyboard.isDown('e') then
+				redisClient.insert_score(score)
+				state = GameState.End
+			end
+
+		elseif state == GameState.End then
+			if love.keyboard.isDown('m') then
+				state = GameState.Menu
+			end
+
+		end
+
+		if love.keyboard.isDown('escape') then
 			love.event.push('quit')
 		end
 	end

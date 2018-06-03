@@ -2,10 +2,16 @@ local RedisClient = require('lib.RedisClient')
 local Highscore = require('lib.Highscore')
 local Menu = require('lib.Menu')
 local Game = require('lib.Game')
+local Player = require('lib.Player')
 
 Manager = {}
 
-GameState = {Menu = 0, Highscore = 1, Game = 2, End = 3}
+GameState = {
+	Menu = 0,
+	Highscore = 1,
+	Game = 2,
+	End = 3
+}
 
 -- Manager constructor
 function Manager.new()
@@ -17,12 +23,14 @@ function Manager.new()
 	local highscore = Highscore.new()
 	local menu = Menu.new()
 	local game = Game.new()
+	local player = Player.new()
 	
 	local score = 0
 
 	function self.load()
-		state = GameState.Menu
 		redisClient.load()
+		player.load()
+		state = GameState.Menu
 	end
 
 	function self.update(dt)
@@ -48,6 +56,8 @@ function Manager.new()
 				state = GameState.End
 			end
 
+			player.update(dt)
+
 		elseif state == GameState.End then
 			if love.keyboard.isDown('m') then
 				state = GameState.Menu
@@ -69,8 +79,9 @@ function Manager.new()
 			highscore.draw()
 		elseif state == GameState.Game then
 			game.draw(score)
+			player.draw()
 		elseif state == GameState.End then
-			love.graphics.print("End", (width - textFont:getWidth("End"))/2, (height - textFont:getHeight())/2)
+			--love.graphics.print("End", (width - textFont:getWidth("End"))/2, (height - textFont:getHeight())/2)
 		end
 		
 	end

@@ -1,4 +1,7 @@
+local Bullet = require ('lib.Bullet')
+
 Player = {}
+bullet = Bullet.new()
 
 PlayerState = {
     Idle = 0,
@@ -12,6 +15,7 @@ PlayerState = {
 -- Player constructor
 function Player.new()
     local self = {}
+    local bullets = {}
 
     local sprites = {
         idle = love.graphics.newImage('resources/sprites/player-idle.png'),
@@ -70,6 +74,11 @@ function Player.new()
 
         end
 
+        if love.keyboard.isDown('space') then
+            bullet.ticks.min = bullet.ticks.min + 1            
+            self.fire()
+        end
+
 		local width, height, _ = love.window.getMode()
         if self.position.x >= width then
             self.position.x = sprites.idle:getWidth()
@@ -100,7 +109,7 @@ function Player.new()
                 self.position.x - sprites.accelerating:getWidth() * 0.5,
                 self.position.y - sprites.accelerating:getHeight() * 0.5,
                 yaw
-        )
+            )
             
         elseif state == PlayerState.HoveringLeft then
             love.graphics.draw(
@@ -135,6 +144,26 @@ function Player.new()
             )
 
         end
+
+        function self.fire()
+            local b
+    
+            if bullet.ticks.min > bullet.ticks.max then return end
+    
+            b = {
+                x  = self.position.x,
+                y  = self.position.y,
+                vx = velPlayerX,
+                vy = velPlayerY
+            }
+    
+            table.insert(bullets, b)
+    
+            return bullets
+        end
+
+        bullet.draw(bullets)
+        bullet.move(bullets, self.lookAt)
     end
 
 	return self

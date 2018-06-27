@@ -148,7 +148,7 @@ function Player.new()
         function self.fire()
             local b
     
-            if bullet.ticks.min > bullet.ticks.max then return end
+            -- if bullet.ticks.min > bullet.ticks.max then return end
     
             b = {
                 x  = self.position.x,

@@ -3,6 +3,7 @@ local Highscore = require('lib.Highscore')
 local Menu = require('lib.Menu')
 local Game = require('lib.Game')
 local Player = require('lib.Player')
+local Asteroid = require('lib.Asteroid')
 
 Manager = {}
 
@@ -24,6 +25,7 @@ function Manager.new()
 	local menu = Menu.new()
 	local game = Game.new()
 	local player = Player.new()
+	local asteroid = Asteroid.new()
 	
 	local score = 0
 
@@ -57,6 +59,7 @@ function Manager.new()
 			end
 
 			player.update(dt)
+			asteroid.update(dt)
 
 		elseif state == GameState.End then
 			if love.keyboard.isDown('m') then
@@ -80,6 +83,7 @@ function Manager.new()
 		elseif state == GameState.Game then
 			game.draw(score)
 			player.draw()
+			asteroid.draw()
 		elseif state == GameState.End then
 			--love.graphics.print("End", (width - textFont:getWidth("End"))/2, (height - textFont:getHeight())/2)
 		end

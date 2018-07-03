@@ -19,14 +19,17 @@ function Manager.new()
 	local self = {}
 
 	local redisClient = RedisClient.new()
+	local asteroids = {}
 
 	local state = nil
 	local highscore = Highscore.new()
 	local menu = Menu.new()
 	local game = Game.new()
 	local player = Player.new()
-	local asteroid = Asteroid.new()
-	
+	for i=1,3 do
+		table.insert(asteroids, Asteroid.new())
+	end
+
 	local score = 0
 
 	function self.load()
@@ -59,7 +62,9 @@ function Manager.new()
 			end
 
 			player.update(dt)
-			asteroid.update(dt)
+			for key, asteroid in pairs(asteroids) do
+				asteroid.update(dt)
+			end
 
 		elseif state == GameState.End then
 			if love.keyboard.isDown('m') then
@@ -83,7 +88,9 @@ function Manager.new()
 		elseif state == GameState.Game then
 			game.draw(score)
 			player.draw()
-			asteroid.draw()
+			for key, asteroid in pairs(asteroids) do
+				asteroid.draw()
+			end
 		elseif state == GameState.End then
 			--love.graphics.print("End", (width - textFont:getWidth("End"))/2, (height - textFont:getHeight())/2)
 		end

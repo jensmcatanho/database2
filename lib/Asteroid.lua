@@ -8,7 +8,6 @@
 Asteroid = {}
 
 local width, height = love.graphics.getDimensions()
-local quadrant = love.math.random(1, 4)
 
 function Asteroid.new()
     local self = {}
@@ -16,6 +15,8 @@ function Asteroid.new()
     local sprites = {
         idle = love.graphics.newImage('resources/sprites/asteroid.png')
     }
+
+    local quadrant = love.math.random(4)
 
     if quadrant == 1 then
         self.position = {
@@ -36,7 +37,12 @@ function Asteroid.new()
         self.position = {
             x = love.math.random((width/2)  + 10, width) - sprites.idle:getWidth() * 0.5,
             y = love.math.random((height/2) + 10, height) - sprites.idle:getHeight() * 0.5
-        }    
+        }
+    else 
+        self.position = {
+            x = width/2 - sprites.idle:getWidth() * 0.5,
+            y = height/2 - sprites.idle:getHeight() * 0.5
+        }   
     end
 
     function self.update(dt)

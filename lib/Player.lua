@@ -30,7 +30,9 @@ function Player.new()
 
     self.position = {
         x = 400 - sprites.idle:getWidth() * 0.5,
-        y = 300 - sprites.idle:getHeight() * 0.5
+        y = 300 - sprites.idle:getHeight() * 0.5,
+        w = sprites.idle:getWidth(),
+        h = sprites.idle:getHeight()
     }
     
     local yaw = math.rad(270)
@@ -153,8 +155,8 @@ function Player.new()
             b = {
                 x  = self.position.x,
                 y  = self.position.y,
-                vx = velPlayerX,
-                vy = velPlayerY
+                vx = 5,
+                vy = 5
             }
     
             table.insert(bullets, b)

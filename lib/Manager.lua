@@ -4,6 +4,7 @@ local Menu = require('lib.Menu')
 local Game = require('lib.Game')
 local Player = require('lib.Player')
 local Asteroid = require('lib.Asteroid')
+local Health = require('lib.Health')
 
 Manager = {}
 
@@ -27,6 +28,7 @@ function Manager.new()
 	local menu = Menu.new()
 	local game = Game.new()
 	local player = Player.new()
+	local health = Health.new()
 
 	local score = 0
 
@@ -44,7 +46,7 @@ function Manager.new()
 				state = GameState.Highscore
 			elseif love.keyboard.isDown('p') then
 				state = GameState.Game
-				for i=1,3 do
+				for i=1,20 do
 					table.insert(asteroids, Asteroid.new())
 				end
 			end
@@ -68,8 +70,25 @@ function Manager.new()
 				asteroid.update(dt)
 				if CheckCollision(player.position.x, player.position.y, player.position.w, player.position.h,
 					asteroid.position.x, asteroid.position.y, asteroid.position.w, asteroid.position.h) then
-						state = GameState.Restart
+						table.remove(asteroids, key)
+						score = score + 100
+						player.health = player.health - 1
+						if player.health == 0 then
+							state = GameState.Restart
+						end
 				end
+			end
+			if health ~= nil then 
+				if CheckCollision(player.position.x, player.position.y, player.position.w, player.position.h,
+					health.position.x, health.position.y, health.position.w, health.position.h) then
+						player.health = player.health + 2
+						health = nil
+				end
+			else
+				health = Health.new()
+			end
+			if #asteroids < 20 then
+				table.insert(asteroids, Asteroid.new())
 			end
 			
 
@@ -81,6 +100,7 @@ function Manager.new()
 		elseif state == GameState.Restart then
 			redisClient.insert_score(score)
 			asteroids = {}
+			player = Player.new()
 			state = GameState.Menu
 
 		end
@@ -98,10 +118,13 @@ function Manager.new()
 		elseif state == GameState.Highscore then
 			highscore.draw()
 		elseif state == GameState.Game then
-			game.draw(score)
+			game.draw(score, player.health)
 			player.draw()
 			for key, asteroid in pairs(asteroids) do
 				asteroid.draw()
+			end
+			if health ~= nil then
+				health.draw()
 			end
 		elseif state == GameState.End then
 			--love.graphics.print("End", (width - textFont:getWidth("End"))/2, (height - textFont:getHeight())/2)

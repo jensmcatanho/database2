@@ -1,7 +1,7 @@
 local Bullet = require ('lib.Bullet')
 
 Player = {}
-bullet = Bullet.new()
+-- bullet = Bullet.new()
 
 PlayerState = {
     Idle = 0,
@@ -34,6 +34,8 @@ function Player.new()
         w = sprites.idle:getWidth(),
         h = sprites.idle:getHeight()
     }
+
+    self.health = 10
     
     local yaw = math.rad(270)
     self.lookAt = {
@@ -76,10 +78,9 @@ function Player.new()
 
         end
 
-        if love.keyboard.isDown('space') then
-            bullet.ticks.min = bullet.ticks.min + 1            
-            self.fire()
-        end
+        -- if love.keyboard.isDown('space') then        
+        --     self.fire()
+        -- end
 
 		local width, height, _ = love.window.getMode()
         if self.position.x >= width then
@@ -152,20 +153,19 @@ function Player.new()
     
             -- if bullet.ticks.min > bullet.ticks.max then return end
     
-            b = {
-                x  = self.position.x,
-                y  = self.position.y,
-                vx = 5,
-                vy = 5
-            }
+            b = Bullet.new(self.position.x, self.position.y)
     
             table.insert(bullets, b)
     
             return bullets
         end
 
-        bullet.draw(bullets)
-        bullet.move(bullets, self.lookAt)
+        local dt = love.timer.getDelta()
+        
+        for key, bullet in pairs(bullets) do
+            bullet.draw(bullets)
+            bullet.move(bullets, self.lookAt, dt)
+        end
     end
 
 	return self

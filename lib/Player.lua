@@ -1,5 +1,3 @@
-local Bullet = require ('lib.Bullet')
-
 Player = {}
 
 PlayerState = {

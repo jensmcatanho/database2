@@ -24,7 +24,7 @@ function Manager.new()
 	local redisClient = RedisClient.new()
 
 	local state = nil
-	local highscore = Highscore.new()
+	local highscore = nil
 	local menu = Menu.new()
 	local game = Game.new()
 	local endgame = End.new()
@@ -44,12 +44,14 @@ function Manager.new()
 		for i=1,20 do
 			asteroids[i].load()
 		end
+		health.load()
 		state = GameState.Menu
 	end
 
 	function self.update(dt)
 		if state == GameState.Menu then
 			if love.keyboard.isDown('h') then
+				highscore = Highscore.new()
 				highscore_list = redisClient.retrieve_highscore()
 				highscore.load(highscore_list)
 				state = GameState.Highscore
@@ -91,6 +93,7 @@ function Manager.new()
 				end
 			else
 				health = Health.new()
+				health.load()
 			end
 			if #asteroids < 20 then
 				asteroid = Asteroid.new()

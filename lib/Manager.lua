@@ -135,7 +135,6 @@ function Manager.new()
 			end
 		elseif state == GameState.End then
 			endgame.draw(score)
-			--love.graphics.print("End", (width - textFont:getWidth("End"))/2, (height - textFont:getHeight())/2)
 		end
 		
 	end

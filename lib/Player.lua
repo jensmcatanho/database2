@@ -1,7 +1,6 @@
 local Bullet = require ('lib.Bullet')
 
 Player = {}
--- bullet = Bullet.new()
 
 PlayerState = {
     Idle = 0,
@@ -146,24 +145,6 @@ function Player.new()
 
         end
 
-        function self.fire()
-            local b
-    
-            -- if bullet.ticks.min > bullet.ticks.max then return end
-    
-            b = Bullet.new(self.position.x, self.position.y)
-    
-            table.insert(bullets, b)
-    
-            return bullets
-        end
-
-        local dt = love.timer.getDelta()
-        
-        for key, bullet in pairs(bullets) do
-            bullet.draw(bullets)
-            bullet.move(bullets, self.lookAt, dt)
-        end
     end
 
 	return self

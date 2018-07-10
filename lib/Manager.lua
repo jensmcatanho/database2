@@ -2,6 +2,7 @@ local RedisClient = require('lib.RedisClient')
 local Highscore = require('lib.Highscore')
 local Menu = require('lib.Menu')
 local Game = require('lib.Game')
+local End = require('lib.End')
 local Player = require('lib.Player')
 local Asteroid = require('lib.Asteroid')
 local Health = require('lib.Health')
@@ -21,20 +22,28 @@ function Manager.new()
 	local self = {}
 
 	local redisClient = RedisClient.new()
-	local asteroids = {}
 
 	local state = nil
 	local highscore = Highscore.new()
 	local menu = Menu.new()
 	local game = Game.new()
+	local endgame = End.new()
 	local player = Player.new()
 	local health = Health.new()
+
+	local asteroids = {}
+	for i=1,20 do
+		table.insert(asteroids, Asteroid.new())
+	end
 
 	local score = 0
 
 	function self.load()
 		redisClient.load()
 		player.load()
+		for i=1,20 do
+			asteroids[i].load()
+		end
 		state = GameState.Menu
 	end
 
@@ -46,9 +55,6 @@ function Manager.new()
 				state = GameState.Highscore
 			elseif love.keyboard.isDown('p') then
 				state = GameState.Game
-				for i=1,20 do
-					table.insert(asteroids, Asteroid.new())
-				end
 			end
 
 		elseif state == GameState.Highscore then
@@ -64,7 +70,6 @@ function Manager.new()
 				state = GameState.End
 			end
 			
-
 			player.update(dt)
 			for key, asteroid in pairs(asteroids) do
 				asteroid.update(dt)
@@ -88,21 +93,23 @@ function Manager.new()
 				health = Health.new()
 			end
 			if #asteroids < 20 then
-				table.insert(asteroids, Asteroid.new())
+				asteroid = Asteroid.new()
+				asteroid.load()
+				table.insert(asteroids, asteroid)
 			end
 			
 
 		elseif state == GameState.End then
 			if love.keyboard.isDown('m') then
 				state = GameState.Menu
+				score = 0
 			end
 		
 		elseif state == GameState.Restart then
 			redisClient.insert_score(score)
 			asteroids = {}
 			player = Player.new()
-			state = GameState.Menu
-
+			state = GameState.End
 		end
 
 		if love.keyboard.isDown('escape') then
@@ -127,6 +134,7 @@ function Manager.new()
 				health.draw()
 			end
 		elseif state == GameState.End then
+			endgame.draw(score)
 			--love.graphics.print("End", (width - textFont:getWidth("End"))/2, (height - textFont:getHeight())/2)
 		end
 		
@@ -135,11 +143,11 @@ function Manager.new()
 	return self
 end
 
-function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
-	return x1 < x2+w2 and
-		   x2 < x1+w1 and
-		   y1 < y2+h2 and
-		   y2 < y1+h1
+function CheckCollision(x1, y1, w1, h1, x2, y2, w2, h2)
+	return x1 < x2 + w2 and
+		   x2 < x1 + w1 and
+		   y1 < y2 + h2 and
+		   y2 < y1 + h1
 end
 
 return Manager

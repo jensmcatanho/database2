@@ -78,21 +78,19 @@ function Player.new()
 
         end
 
-        -- if love.keyboard.isDown('space') then        
-        --     self.fire()
-        -- end
-
 		local width, height, _ = love.window.getMode()
         if self.position.x >= width then
-            self.position.x = sprites.idle:getWidth()
+            self.position.x = self.position.w
         elseif self.position.x <= 0 then
-            self.position.x = width - sprites.idle:getWidth()
+            self.position.x = width - self.position.w
         end
 
         if self.position.y >= height then
-            self.position.y = sprites.idle:getHeight()
+            self.position.y = self.position.h
+
         elseif self.position.y <= 0 then
-            self.position.y = height - sprites.idle:getHeight()
+            self.position.y = height - self.position.h
+            
         end
 
     end
